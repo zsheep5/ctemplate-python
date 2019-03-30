@@ -1,0 +1,11 @@
+<* This is a comment *>
+  File var Name: <TMPL_var name="varName"> 
+  <TMPL_loop name="aLoop"> 
+  file _Loop has var <TMPL_var name="loopVar"> 
+      value <TMPL_var name="loopVar2"> 
+  </TMPL_loop> 
+  Sweet name: <TMPL_var name="sweet.name">
+  Sweet price: <TMPL_var name="sweet.price">
+  <TMPL_if name="sweet.isBig" value="0">
+  Sweet is big
+  </TMPL_IF>
