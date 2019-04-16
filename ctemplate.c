@@ -219,7 +219,8 @@ mymalloc(size_t size)
     void *ret = malloc(size);
     if (ret == 0)
     {
-        fputs("C Template library: out of memory\n", stderr);
+        PyErr_SetString(PyExc_IOError, "C Template library: out of memory\n");
+        //fputs("C Template library: out of memory\n", stderr);
         exit(1);
     }
     return ret;

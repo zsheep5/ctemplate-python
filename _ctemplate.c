@@ -18,6 +18,8 @@
 #include <datetime.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <limits.h>
 #include "ctemplate.h"
 
 
@@ -65,12 +67,13 @@ static PyObject *ctemplate_skompiluj_wzorzec(PyObject *self, PyObject *args)
   //declare the first set of variables we need 
   char *file_or_string = "string";
   char *template = NULL;
+  char *temppath = "";
   PyObject *main_dictionary = NULL;
   
   //step 1 get the passed variable
-  if (!PyArg_ParseTuple(args, "sO!|s", &template,
+  if (!PyArg_ParseTuple(args, "sO!|ss", &template,
                         &PyDict_Type, &main_dictionary,
-                        &file_or_string))
+                        &file_or_string, &temppath))
     return NULL; /* this returns borrowed references */
 
   //step2 break the python dictionary down to be processed by ctemplate 
@@ -84,15 +87,19 @@ static PyObject *ctemplate_skompiluj_wzorzec(PyObject *self, PyObject *args)
   }
 
   PyObject *retVal = NULL;
+
   FILE *mainFile;
   char *result = NULL ;
   int position = 0, freadPosition = -1, temp_fd;
-  char temporaryFileName[]="ctemplate_XXXXXX";
+  char temporaryFileName[PATH_MAX] = "" ;
+
+  strcat(temporaryFileName, temppath);
+  strcat(temporaryFileName, "/ctemplate_XXXXXX");
   temp_fd = mkstemp(temporaryFileName); /* we need temporary file name for file operations forced by ctemplate */
 
   if ((mainFile = fdopen(temp_fd, "wr")) == NULL)
   {
-    PyErr_SetString(PyExc_IOError, "Failed to Create the In Memory File Structure");
+    PyErr_Format(PyExc_IOError, "Failed to create the temporary File %s most likely a permission error", temporaryFileName);
     goto OutFileFailed;
   }
 
