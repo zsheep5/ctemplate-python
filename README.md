@@ -35,7 +35,7 @@ it should compile to lower versions of 3
 
 4.6. Tested on Debian 9
 
-4.7. Unicode support has not been tested probably will not work  
+4.7. Unicode support has been tested on linux not fully tested  
 
 to install  download the code 
 python3 setup.py build_ext install
